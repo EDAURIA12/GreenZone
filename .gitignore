@@ -1,0 +1,21 @@
+# Ambienti Virtuali Python
+.venv/
+venv/
+env/
+__pycache__/
+
+# Dati (evitiamo di caricare file enormi o raw)
+data/raw/*
+!data/raw/.gitkeep
+
+# File di progetto QGIS (pesanti e non utili per il codice Python)
+*.qgz
+*.qgs
+*.qgz~
+
+# Jupyter Notebook Checkpoints
+.ipynb_checkpoints/
+
+# File di Sistema Operativo
+.DS_Store
+Thumbs.db
