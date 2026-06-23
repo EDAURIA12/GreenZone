@@ -13,12 +13,12 @@ Il sistema valuta l'idoneità delle aree basandosi su una serie di vincoli norma
 * Vincolo di Sicurezza: Buffer di esclusione di 30 metri della rete ferroviaria.
 * Dimensione del lotto: Esclusione di aree con superficie minore di 1000 metri quadri (scartati i *pocket parks* non rilevanti per grandi riqualificiazioni).
 
-* **2. Requisiti Premianti (Features del Modello AI):**
+**2. Requisiti Premianti (Features del Modello AI):**
 * **Indice di Compattezza (Polsby-Popper):** Per penalizzare aree lunghe e strette (es. vecchi corridoi stradali) a favore di geometri circolari/quadrate ottimali per un parco. 
 * Vicinanza ad aree ad alta densità abitativa (Dati ISTAT).
 * Distanza dai parchi già esistenti (per massimizzare la copertura del verde urbano).
 
-**Metodologia e Workflow GeoSpaziale (QGIS)
+**Metodologia e Workflow GeoSpaziale (QGIS)**
 La prima fase del progetto ha riguardato l'estrazione e la pulizia dei dati vettoriali tramite il **MOdellatore Grafico di QGIS**.
 
 1. **Intersezione Morfologica:** Il layer Copernicus Urban Atlas è stato ritgliato sulle sole aree pianeggianti di Salerno.
