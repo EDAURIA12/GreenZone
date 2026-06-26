@@ -1,0 +1,5 @@
+outs:
+- md5: d9d8f9e4b0f0240e4c03cf1b89e0df0a
+  size: 1340327
+  hash: md5
+  path: dataset_parchi_salerno.geojson
