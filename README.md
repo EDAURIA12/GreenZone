@@ -52,9 +52,15 @@ Riproiezione dei dati spaziali (WGS84) e creazione di una mappa interattiva per 
 
 *(I lotti in verde rappresentano la fascia di Alta Priorità generata dall'IA).*
 
-### Sviluppi in corso (To-Do):
-4. **Explainable AI (XAI):** Interpretazione statistica dei risultati spaziali per giustificare l'alta classificazione di specifiche aree (evitando l'effetto Black Box).
-5. **Deployment (FastAPI):** Modello esposto come microservizio RESTful, progettato per essere interrogabile direttamente da un client GIS desktop.
+
+### 4. **Explainable AI (XAI):** 
+Per rispettare i principi di tracciabilità dell'Intelligenza Artificiale, il modello fornisce un output visivo che spiega la classificazione dei cluster, evitando l'effetto *Black Box* e rendendo interpretabile il processo decisionale della macchina.
+Lo Scatter Plot evidenzia come la distribuzione asimmetrica positiva delle aree (Right-Skewed) abbia permesso all'algoritmo di premiare i rarissimi lotti con estensione e compattezza ottimali (Top 10).
+
+![Grafico XAI Cluster](screenshots/xai_cluster_plot.png)
+
+### 5. **Deployment (FastAPI):** 
+L'intero motore logico è stato pacchettizzato ed esposto come microservizio RESTful. Questo permette a client esterni (es. applicativi Web o plugin QGIS) di interrogare il modello in tempo reale inviando i dati di un lotto e ottenendo il  *Suitability Score* calcolato.
 
 ## 💻 Tecnologie Utilizzate
 * **GIS:** QGIS (Modellatore Grafico, Geoprocessing)
