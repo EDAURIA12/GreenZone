@@ -27,14 +27,34 @@ La prima fase del progetto ha riguardato l'estrazione e la pulizia dei dati vett
 
 Il risultato di questa pipeline è il dataset validato e consolidato: `dataset_parchi_salerno.geojson`.
 
-## 🧠 Architettura del Sistema MLOps & Analisi Dati (In progress)
-L'infrastruttura segue il paradigma MLOps per garantire riproducibilità, tracciamento e deployment continuo:
+## 🧠 Architettura del Sistema MLOps & Analisi Dati
+L'infrastruttura segue il paradigma MLOps per garantire riproducibilità, tracciamento e deployment continuo. Di seguito le fasi di sviluppo implementate:
 
-1. **Data Engineering GeoPandas:** Ingestione del GeoJSON esportato da QGIS.
-2. **Machine Learning:** Algoritmi (Clustering/Scoring) per classificare l'idoneità delle 317 aree candidate individuate.
-3. **Explainable AI (XAI):** Interpretazione dei risultati spaziali per giustificare l'esclusione o l'alta classificazione di specifiche aree urbane.
-4. **Visualizzazione:** Creazione di mappe interattive (Folium) per la fruizione dei risultati da parte dei decisori.
-5. **Deployment (FastAPI):** Modello esposto come microservizio RESTful, progettato per essere interrogabile direttamente da un client GIS desktop (QGIS).
+### 1. Data Engineering (GeoPandas) e Sanity Check
+Ingestione del GeoJSON esportato da QGIS. È stato calcolato l'**Indice di Compattezza** per eliminare automaticamente i falsi positivi (artefatti geometrici residui), garantendo che la macchina valuti solo lotti urbanisticamente validi.
+
+| Geometria Idonea (Score: 0.67) | Artefatto/Corridoio (Score: 0.25) |
+| :---: | :---: |
+| ![Lotto Ottimale](screenshots/compattezza_alta.png) | ![Lotto Scartato](screenshots/compattezza_bassa.png) |
+| *ID: 5841 - Forma Compatta, Mantenuta.* | *ID: 5821 - Forma Allungata/Irregolare, Scartata.* |
+
+### 2. Machine Learning: Motore Ibrido (MCDA + K-Means)
+Per classificare l'idoneità delle aree rimanenti, è stato sviluppato un approccio che unisce logica di dominio e Machine Learning non supervisionato:
+* **Scoring MCDA:** Calcolo di un *Suitability Score* normalizzato (60% Area, 40% Compattezza).
+* **Clustering K-Means (Scikit-Learn):** Raggruppamento algoritmico dei lotti in 3 cluster naturali di priorità (Alta, Media, Bassa), rimuovendo i bias decisionali umani e permettendo l'estrazione della **Top 10 assoluta**.
+
+### 3. Visualizzazione WEBGIS (Folium)
+Riproiezione dei dati spaziali (WGS84) e creazione di una mappa interattiva per la fruizione dei risultati da parte dei decisori.
+
+| Panoramica Lotti Classificati | Dettaglio Top 10 e Pop-up Interattivi |
+| :--: | :--: |
+| ![Mappa Larga](screenshots/MappaLarga.png) | ![Mappa Zoom](screenshots/MappaZoom.png) |
+
+*(I lotti in verde rappresentano la fascia di Alta Priorità generata dall'IA).*
+
+### Sviluppi in corso (To-Do):
+4. **Explainable AI (XAI):** Interpretazione statistica dei risultati spaziali per giustificare l'alta classificazione di specifiche aree (evitando l'effetto Black Box).
+5. **Deployment (FastAPI):** Modello esposto come microservizio RESTful, progettato per essere interrogabile direttamente da un client GIS desktop.
 
 ## 💻 Tecnologie Utilizzate
 * **GIS:** QGIS (Modellatore Grafico, Geoprocessing)
@@ -58,8 +78,8 @@ cd GreenZone
 python -m venv .venv
 ```
 3. **Attivare l'ambiente virtuale:**
- * Su Windows: `.venv\Scripts\activate`
- * Su MacOS/Linux: `source .venv/bin/activate`
+* Su Windows: `.venv\Scripts\activate`
+* Su MacOS/Linux: `source .venv/bin/activate`
 
 4. **Installare le dipendenze necessarie:**
 ```bash
