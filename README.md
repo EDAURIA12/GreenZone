@@ -43,7 +43,12 @@ Per classificare l'idoneità delle aree rimanenti, è stato sviluppato un approc
 * **Scoring MCDA:** Calcolo di un *Suitability Score* normalizzato (60% Area, 40% Compattezza).
 * **Clustering K-Means (Scikit-Learn):** Raggruppamento algoritmico dei lotti in 3 cluster naturali di priorità (Alta, Media, Bassa), rimuovendo i bias decisionali umani e permettendo l'estrazione della **Top 10 assoluta**.
 
-### 3. Visualizzazione WEBGIS (Folium)
+### 3. MLOps (Tracciabilità e Versionamento)
+Per garantire il rigore scientifico del modello e la riproducibilità:
+* **DVC (Data Version Control):** Utilizzato per il versionamento e il tracciamento del dataset vettoriale principale, superando i limiti di Git con i file geografici pesanti.
+* **MLflow:** Implementato per la fase di training, garantendo la storicizzazione degli esperimenti, la registrazione degli iperparametri (es. K=3, soglie di scarto) e delle metriche di performance.
+
+### 4. Visualizzazione WEBGIS (Folium)
 Riproiezione dei dati spaziali (WGS84) e creazione di una mappa interattiva per la fruizione dei risultati da parte dei decisori.
 
 | Panoramica Lotti Classificati | Dettaglio Top 10 e Pop-up Interattivi |
@@ -52,42 +57,52 @@ Riproiezione dei dati spaziali (WGS84) e creazione di una mappa interattiva per 
 
 *(I lotti in verde rappresentano la fascia di Alta Priorità generata dall'IA).*
 
-
-### 4. **Explainable AI (XAI):** 
+### 5. Explainable AI (XAI)
 Per rispettare i principi di tracciabilità dell'Intelligenza Artificiale, il modello fornisce un output visivo che spiega la classificazione dei cluster, evitando l'effetto *Black Box* e rendendo interpretabile il processo decisionale della macchina.
 Lo Scatter Plot evidenzia come la distribuzione asimmetrica positiva delle aree (Right-Skewed) abbia permesso all'algoritmo di premiare i rarissimi lotti con estensione e compattezza ottimali (Top 10).
 
 ![Grafico XAI Cluster](screenshots/xai_cluster_plot.png)
 
-### 5. **Deployment (FastAPI):** 
-L'intero motore logico è stato pacchettizzato ed esposto come microservizio RESTful. Questo permette a client esterni (es. applicativi Web o plugin QGIS) di interrogare il modello in tempo reale inviando i dati di un lotto e ottenendo il  *Suitability Score* calcolato.
+### 6. Deployment Dinamico (FastAPI)
+L'intero motore logico è stato pacchettizzato ed esposto come microservizio RESTful (`main.py`). L'API è agnostica rispetto alla geografia e valuta i lotti in tempo reale. Accetta in ingresso parametri metrici e i **pesi decisionali dinamici**, consentendo simulazioni interattive. Questo permette a client esterni (es. applicativi Web o plugin QGIS) di interrogare il modello in tempo reale inviando i dati di un lotto e ottenendo il *Suitability Score* calcolato.
+
+### 7. Client QGIS (Interfaccia Utente PyQt)
+Sviluppo del modulo client `GreenZone_UI.py` eseguibile nativamente in QGIS. Genera una GUI fluttuante e non bloccante che permette al decisore di:
+1. Selezionare lotti multipli sulla mappa.
+2. Modificare in tempo reale i pesi multicriterio (Area vs Compattezza) eseguendo simulazioni *What-If*.
+3. Interrogare l'API e ricevere istantaneamente lo *Suitability Score* IA per ciascun lotto.
 
 ## 💻 Tecnologie Utilizzate
-* **GIS:** QGIS (Modellatore Grafico, Geoprocessing)
+* **GIS & UI:** QGIS, PyQGIS, PyQt5, Folium
 * **Data Processing:** Python, GeoPandas, Shapely
-* **Machine Learning:** Scikit-Learn / XGBoost, SHAP (per XAI)
-* **MLOps:** MLflow, DVC
-* **Backend:** FastAPI, Uvicorn
+* **Machine Learning & MLOps:** Scikit-Learn, MLflow, DVC
+* **Backend:** FastAPI, Uvicorn, Pydantic
 
-## ⚙️ Setup dell'ambiente Locale
+## ⚙️ Setup e Utilizzo dell'ambiente
 
 Per riprodurre il progetto in locale sul proprio computer, seguire i seguenti passaggi:
 
-1. **Clonare il repository:**
+**1. Setup dell'Ambiente e Dipendenze**
 ```bash 
-git clone https://github.com/EDAURIA12/GreenZone.git
+git clone [https://github.com/EDAURIA12/GreenZone.git](https://github.com/EDAURIA12/GreenZone.git)
 cd GreenZone
-```
-
-2. **Creare un ambiente virtuale Python:**
-```bash
 python -m venv .venv
-```
-3. **Attivare l'ambiente virtuale:**
-* Su Windows: `.venv\Scripts\activate`
-* Su MacOS/Linux: `source .venv/bin/activate`
-
-4. **Installare le dipendenze necessarie:**
-```bash
+# Attivare l'ambiente virtuale:
+# Su Windows: .venv\Scripts\activate
+# Su MacOS/Linux: source .venv/bin/activate
 pip install -r requirements.txt
+
+
+**2. Avvio del Microservizio (Backend AI)**
+```bash
+uvicorn main:app --reload
+
 ```
+
+**3. Utilizzo dell'Interfaccia in QGIS (Frontend)**
+1. Aprire QGIS e caricare i dati vettoriali dei lotti.
+2. Aprire la **Console Python** di QGIS (*Plugin -> Console Python*).
+3. Cliccare su "Mostra Editor" e aprire lo script `GreenZone_UI.py` fornito nella repository.
+4. Premere **Play** (Esegui Script). 
+5. Interagire con la finestra grafica: selezionare i lotti sulla mappa, aggiustare i pesi e calcolare il punteggio in tempo reale.
+
