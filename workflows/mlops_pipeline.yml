@@ -14,7 +14,8 @@ permissions:
 jobs:
   continuous-training:
     runs-on: ubuntu-latest
-    
+     
+     
     steps:
     - name: Checkout del codice
       uses: actions/checkout@v3
