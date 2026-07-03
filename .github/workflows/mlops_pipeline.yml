@@ -1,0 +1,47 @@
+name: GreenZone MLOps Continuous Training
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'data/raw/**'
+      - 'train.py'
+
+jobs:
+  continuous-training:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout del codice
+      uses: actions/checkout@v3
+
+    - name: Setup di Python 3.10
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Installazione Dipendenze
+      run: |
+        python -m pip install --upgrade pip
+        pip install geopandas pandas scikit-learn mlflow
+        # Nota: in un progetto reale qui faresti "pip install -r requirements.txt"
+
+    - name: DVC Pull (Recupero Dataset)
+      run: |
+        pip install dvc
+        # dvc pull # (De-commentare se si ha DVC configurato con un remote es. S3/GDrive)
+        echo "Simulazione: Dati spaziali recuperati dal Remote Storage."
+
+    - name: Esecuzione Addestramento Dinamico (train.py)
+      run: |
+        python train.py
+        
+    - name: Commit e Push della nuova configurazione
+      run: |
+        git config --global user.name 'GitHub Actions Bot'
+        git config --global user.email 'actions@github.com'
+        git add config_modello.json
+        # Ignora se non ci sono stati cambiamenti
+        git diff --quiet && git diff --staged --quiet || git commit -m "🤖 MLOps: Aggiornamento K-Means e CRS per nuovo comune"
+        git push

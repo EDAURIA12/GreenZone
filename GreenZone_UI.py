@@ -77,7 +77,7 @@ class GreenZoneDialog(QDialog):
                 }
                 
                 try:
-                    risposta = requests.post("http://127.0.0.1:8000/valuta_lotto", json=payload)
+                    risposta = requests.post("http://127.0.0.1:8000/valuta_lotto_simulazione", json=payload)
                     score = risposta.json().get("suitability_score_calcolato", 0)
                     
                     # Stampiamo il risultato nel nostro mini-schermo
