@@ -47,6 +47,7 @@ print("Calcolo delle metriche spaziali")
 
 # Siccome abbiamo ora tutto in EPSG:3035 possiamo calcolare
 # l'area in metri quadri esatti
+
 gdf['area_mq'] = gdf.geometry.area
 gdf['perimetro_m'] = gdf.geometry.length
 
