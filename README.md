@@ -39,12 +39,17 @@ La prima fase del progetto ha riguardato l'estrazione, la pulizia e la struttura
 L'intera infrastruttura segue rigorosamente il paradigma MLOps per garantire riproducibilità, tracciamento degli esperimenti e deployment continuo.
 
 ### 1. Data Engineering (GeoPandas) & Sanity Check
-Ingestione del GeoJSON esportato da QGIS. Viene calcolato l'Indice di Compattezza per eliminare automaticamente i falsi positivi (artefatti geometrici residui da geoprocessing), garantendo che la macchina valuti solo lotti urbanisticamente validi.
+Ingestione del GeoJSON esportato da QGIS. Viene calcolato l'**Indice di Compattezza** per eliminare automaticamente i falsi positivi (artefatti geometrici residui da geoprocessing), garantendo che la macchina valuti solo lotti urbanisticamente validi.
 
 | ID Lotto | Tipo Geometria | Score Compattezza | Stato |
 | :--- | :--- | :---: | :--- |
 | **5841** | Forma Compatta / Quadrata | `0.67` | **Mantenuta (Idonea)** |
 | **5821** | Forma Allungata / Corridoio Irregolare | `0.25` | **Scartata (Artefatto)** |
+
+| Lotto Ottimale (Idoneo) | Lotto Scartato (Artefatto) |
+| :---: | :---: |
+| !(screenshots/compattezza_alta.png) | !(screenshots/compattezza_bassa.png) |
+| *ID: 5841 - Forma Compatta, Mantenuta.* | *ID: 5821 - Forma Allungata/Irregolare, Scartata.* |
 
 ### 2. Machine Learning: Motore Ibrido (MCDA + K-Means)
 Per classificare l'idoneità delle aree rimanenti, viene applicato un approccio che unisce logica di dominio e Machine Learning non supervisionato:
