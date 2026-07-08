@@ -1,0 +1,5 @@
+outs:
+- md5: 27186d9c3d4da3b2e2db1fa3a3af0f3a
+  size: 1392522
+  hash: md5
+  path: dataset_comune_target.geojson

@@ -13,7 +13,7 @@ engine = create_engine(connection_string)
 
 print("Inizio la lettura del file GeoJSON...")
 # 2. Carica il dataset validato
-gdf = gpd.read_file("data/processed/dataset_parchi_salerno.geojson")
+gdf = gpd.read_file("data/raw/dataset_comune_target.geojson")
 # 3. Assicurati che il sistema di riferimento (CRS) sia corretto (es. WGS84 = 4326 o Monte Mario = 3004)
 # Sostituisci 4326 con l'EPSG corretto del tuo progetto se diverso
 if gdf.crs is None:

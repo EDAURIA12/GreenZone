@@ -19,3 +19,7 @@ data/raw/*
 # File di Sistema Operativo
 .DS_Store
 Thumbs.db
+
+# DVC
+!data/raw/*.dvc
+!data/raw/.gitignore
