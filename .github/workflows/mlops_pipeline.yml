@@ -31,11 +31,6 @@ jobs:
         python -m pip install --upgrade pip
         pip install geopandas pandas scikit-learn mlflow
         
-    - name: DVC Pull (Recupero Dataset)
-      run: |
-        pip install dvc
-        echo "Simulazione: Dati spaziali recuperati dal Remote Storage."
-
     - name: Esecuzione Addestramento Dinamico (train.py)
       run: |
         python train.py
