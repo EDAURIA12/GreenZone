@@ -48,7 +48,7 @@ Ingestione del GeoJSON esportato da QGIS. Viene calcolato l'**Indice di Compatte
 
 | Lotto Ottimale (Idoneo) | Lotto Scartato (Artefatto) |
 | :---: | :---: |
-| !(screenshots/compattezza_alta.png) | !(screenshots/compattezza_bassa.png) |
+| ![Lotto Ottimale](screenshots/compattezza_alta.png) | ![Lotto Scartato](screenshots/compattezza_bassa.png) |
 | *ID: 5841 - Forma Compatta, Mantenuta.* | *ID: 5821 - Forma Allungata/Irregolare, Scartata.* |
 
 ### 2. Machine Learning: Motore Ibrido (MCDA + K-Means)
