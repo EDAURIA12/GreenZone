@@ -1,6 +1,7 @@
 import geopandas as gpd
 from sqlalchemy import create_engine, text
-
+import glob
+import os  
 # 1. Configurazione
 DB_USER = "admin"
 DB_PASS = "segreta"
