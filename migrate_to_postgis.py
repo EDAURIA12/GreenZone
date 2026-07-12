@@ -22,7 +22,7 @@ if gdf.crs is None:
 print("Trasferimento dei dati in PostGIS in corso...")
 # 4. Spingi i dati nel database (crea automaticamente la tabella spaziale)
 gdf.to_postgis(
-    name="lotti_industriali", 
+    name="lotti_valutati", 
     con=engine, 
     if_exists="replace", 
     index=True, 
