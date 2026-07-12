@@ -11,11 +11,20 @@ DB_NAME = "greenzone"
 connection_string = f"postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 engine = create_engine(connection_string)
 
-# 2. Leggi il file GeoJSON
-print("Inizio la lettura del file GeoJSON...")
-gdf = gpd.read_file("data/raw/dataset_comune_target.geojson")
+# 1. Cerca tutti i file .geojson all'interno della cartella data/raw/
+lista_file = glob.glob("data/raw/*.geojson")
 
-# 3. Pulizia totale dello schema 'public'
+if not lista_file:
+    raise FileNotFoundError("🚨 Errore: Nessun file GeoJSON trovato nella cartella data/raw/")
+
+# 2. Seleziona automaticamente il file più recente
+file_target = max(lista_file, key=os.path.getmtime)
+print(f"📂 File rilevato automaticamente: {file_target}")
+
+# 3. Legge il file trovato
+gdf = gpd.read_file(file_target)
+
+# 4. Pulizia totale dello schema 'public'
 with engine.connect() as conn:
     print("Pulizia totale dello schema 'public'...")
     conn.execute(text("DROP SCHEMA public CASCADE;"))
@@ -23,7 +32,7 @@ with engine.connect() as conn:
     conn.execute(text("CREATE EXTENSION IF NOT EXISTS postgis;"))
     conn.commit()
 
-# 4. Preparazione dati
+# 5. Preparazione dati
 # Se 'id_lotto' è nel file, rimuoviamolo dal contenuto per evitare conflitti con l'indice
 if 'id_lotto' in gdf.columns:
     gdf = gdf.drop(columns=['id_lotto'])
@@ -38,7 +47,7 @@ else:
     print("📏 Coordinate in METRI rilevate.")
     gdf.set_crs(epsg=3035, allow_override=True, inplace=True)
 
-# 5. Trasferimento nel DB
+# 6. Trasferimento nel DB
 print("Trasferimento 'lotti_valutati' in corso...")
 gdf.to_postgis(
     name="lotti_valutati", 
