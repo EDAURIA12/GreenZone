@@ -50,7 +50,7 @@ def valuta_lotto_simulazione(lotto: LottoInput):
         "dettagli": {
             "area_normalizzata": round(area_norm, 3),
             "compattezza": round(lotto.compattezza, 3)
-        }
+        } 
     }
 
 @app.get("/genera_mappa_top10")

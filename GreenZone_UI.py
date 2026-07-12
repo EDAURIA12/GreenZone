@@ -15,7 +15,7 @@ class GreenZoneDialog(QDialog):
         layout = QVBoxLayout()
 
         self.lbl_comune = QLabel("📍 Città Target (Es. Salerno, Battipaglia):")
-        self.txt_comune = QLineEdit("Salerno")
+        self.txt_comune = QLineEdit("Target")
         self.txt_comune.setStyleSheet("padding: 5px; font-size: 14px;")
 
         self.lbl_area = QLabel("Importanza Area (0.0 - 1.0):")
@@ -68,8 +68,26 @@ class GreenZoneDialog(QDialog):
         
         for feat in selezionati:
             try:
-                area = feat['Area_mq']
-                perimetro = feat['Perim_m'] # <-- Corretto: Perim_m
+                # Estrazione DINAMICA dell'Area (Cerca varianti del nome)
+                area = None
+                for col_name in ['Area_mq', 'area_mq', 'Area', 'area']:
+                    try:
+                        area = feat[col_name]
+                        break
+                    except KeyError: pass
+                
+                # Estrazione DINAMICA del Perimetro (Cerca varianti del nome)
+                perimetro = None
+                for col_name in ['Perim_m', 'perim_m', 'perimeter', 'Perimeter']:
+                    try:
+                        perimetro = feat[col_name]
+                        break
+                    except KeyError: pass
+
+                if area is None or perimetro is None:
+                    self.txt_log.append(f"🚨 Errore: Colonne Area o Perimetro mancanti nel lotto {feat.id()}!")
+                    break
+                
                 fid = feat.id()
                 
                 if perimetro > 0:
@@ -88,9 +106,6 @@ class GreenZoneDialog(QDialog):
                     score = risposta.json().get("suitability_score_calcolato", 0)
                     self.txt_log.append(f"✅ Lotto ID {fid}: Score ⭐ {score}/100")
             
-            except KeyError as e:
-                self.txt_log.append(f"🚨 Errore Dati: Manca la colonna {e} nella tabella!")
-                break
             except requests.exceptions.RequestException:
                 self.txt_log.append("🚨 Errore: Il server FastAPI è spento!")
                 break 
