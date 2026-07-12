@@ -4,9 +4,7 @@ venv/
 env/
 __pycache__/
 
-# Dati (evitiamo di caricare file enormi o raw)
-data/raw/*
-!data/raw/.gitkeep
+
 
 # File di progetto QGIS (pesanti e non utili per il codice Python)
 *.qgz
@@ -19,7 +17,3 @@ data/raw/*
 # File di Sistema Operativo
 .DS_Store
 Thumbs.db
-
-# DVC
-!data/raw/*.dvc
-!data/raw/.gitignore
